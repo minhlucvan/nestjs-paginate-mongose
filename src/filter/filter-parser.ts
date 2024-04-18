@@ -1,11 +1,8 @@
-import {
-  CollectionProperties,
-  CollectionDto,
-  SortValidationError,
-} from '@forlagshuset/nestjs-mongoose-paginate';
-import { FilterSchemaValidator } from './filter-schema.validator';
+import { ApiCollectionDto } from '../input.dto';
+import { EApiFilterOperator } from '../dto/api-property.decorator';
+import { CollectionProperties } from '../property';
+import { FilterSchemaValidator } from './validator';
 import { BadRequestException } from '@nestjs/common';
-import { EApiFilterOperator } from './property.decorator';
 
 export type FilterableParameters = Record<string, unknown>;
 export class FilterValidationError extends BadRequestException {}
@@ -29,7 +26,7 @@ const allowedKeys = [
 export class FilterParser {
   constructor(private collectionPropsClass: typeof CollectionProperties) {}
 
-  parse(filter: CollectionDto): FilterableParameters {
+  parse(filter: ApiCollectionDto): FilterableParameters {
     const fltr = this.transform(filter.filter);
 
     if (fltr === undefined || fltr === null || Object.keys(fltr).length === 0) {
@@ -93,6 +90,13 @@ export class FilterParser {
         return value;
       }
       return value.split(',').map((e) => e.trim());
+    }
+    if (key === EApiFilterOperator.REGEX.toString()) {
+      return new RegExp(value);
+    }
+    // parse lt, lte, gt, gte to number
+    if (['$lt', '$lte', '$gt', '$gte'].includes(key)) {
+      return parseFloat(value);
     }
     return value;
   }

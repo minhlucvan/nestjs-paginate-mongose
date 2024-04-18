@@ -5,16 +5,6 @@ import { IsObject, IsOptional, IsString, Min } from 'class-validator';
 export type SortableParameters = Record<string, 'desc' | 'asc'>;
 export type FilterableParameters = Record<string, unknown>;
 
-export class CounterDto {
-  @ApiPropertyOptional({
-    type: String,
-    description: 'Filter query string, see documentation for its schema',
-  })
-  @Transform((v: TransformFnParams) => filterQueryToObject(v.value))
-  @IsObject()
-  readonly filter?: FilterableParameters;
-}
-
 export class ApiCollectionDto {
   @ApiPropertyOptional({
     description:
@@ -44,8 +34,12 @@ export class ApiCollectionDto {
   @IsOptional()
   @IsString()
   readonly root?: string;
+
+  @ApiPropertyOptional({
+    type: String,
+    description: 'Filter query string, see documentation for its schema',
+  })
+  @IsObject()
+  readonly filter?: FilterableParameters;
 }
 
-function filterQueryToObject(v: string): Record<string, unknown> {
-  return JSON.parse(v);
-}

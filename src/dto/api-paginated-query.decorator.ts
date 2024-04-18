@@ -6,7 +6,7 @@ import {
   ApiFilterOperators,
   DEFAULT_FILTER_OPERATORS,
 } from './api-property.decorator';
-import { ParseQueryPipe } from '../validation.pipe';
+import { ValidationPipe } from '../validation.pipe';
 
 export type FilterOption = {
   name: string;
@@ -57,7 +57,7 @@ export function ApiPaginatedQuery(dtoType: any): MethodDecorator {
     );
   }
   const decorators = [
-    UsePipes(new ParseQueryPipe(dtoType)),
+    UsePipes(new ValidationPipe(dtoType)),
     ...queryParameters,
   ];
 

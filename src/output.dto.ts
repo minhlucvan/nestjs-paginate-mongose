@@ -1,12 +1,23 @@
-export interface Pagination {
-  total: number;
-  page: number;
-  limit: number;
-  next?: number;
-  prev?: number;
+export interface CollectionResponseMeta {
+  itemsPerPage: number;
+  totalItems: number;
+  currentPage: number;
+  totalPages: number;
+  sortBy?: [string, 'ASC' | 'DESC'][];
+  search?: string;
+  filter?: Record<string, string>;
+}
+
+export interface CollectionResponseLinks {
+  first: string;
+  previous: string;
+  current: string;
+  next: string;
+  last: string;
 }
 
 export interface CollectionResponse<T> {
-  readonly data: T[];
-  readonly pagination: Pagination;
+  data: T[];
+  meta: CollectionResponseMeta;
+  links: CollectionResponseLinks;
 }

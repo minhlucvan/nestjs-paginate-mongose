@@ -100,12 +100,10 @@ GET http://localhost:3000/cats?limit=5&page=2&sortBy=color:DESC&search=i&filter.
 ```typescript
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PaginateModule } from '@minhlucvan/nestjs-paginate-mongoose';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost/test'),
-    PaginateModule.forRoot()
   ],
 })
 export class AppModule {}
@@ -152,31 +150,71 @@ export class MyCollectionProperties extends CollectionProperties {
 }
 ```
 
-### Validation Pipe
+### Controller
 
 ```typescript
+import { Controller, Post, Query } from '@nestjs/common';
+import { Get } from '@nestjs/common';
+import { CatProperties } from './dtos/cat.props';
+import { CatDto } from './dtos/cat.dto';
 import {
-  CollectionDto,
-  ParseQueryPipe,
-  CollectionResponse,
+  ApiCollectionDto,
   ApiPaginatedQuery,
-  ApiPaginatedResponse
-} from '@minhlucvan/nestjs-paginate-mongoose';
-import { MyCollectionProperties } from './my-collection-properties';
-import { MyDocument } from './my-document';
+  ApiPaginatedResponse,
+  CollectionResponse,
+} from '../../../../src';
+import { CatsService } from './cats.service';
 
-@Controller()
-export class AppController {
+@Controller('cats')
+export class CatsController {
+  constructor(private readonly service: CatsService) {}
+
+  @Post('seed')
+  async seed() {
+    return this.service.seed(20);
+  }
 
   @Get('list')
-  @ApiPaginatedQuery(MyCollectionProperties)
-  @ApiPaginatedResponse(MyDocument)
+  @ApiPaginatedQuery(CatProperties)
+  @ApiPaginatedResponse(CatDto)
   async filter(
-    @Query(new ValidationPipe(MyCollectionProperties))
-    collectionDto: CollectionDto,
-  ): Promise<CollectionResponse<MyDocument>> {
+    @Query() collectionDto: ApiCollectionDto,
+  ): Promise<CollectionResponse<CatDto>> {
     return await this.service.list(collectionDto);
   }
+}
+
+```
+
+### Service
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import {
+  ApiCollectionDto,
+  CollectionResponse,
+  DocumentCollector,
+} from '../../../../src';
+import { CatDocument } from './schemas/cat.schema';
+import { CatDto } from './dtos/cat.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+
+@Injectable()
+export class CatsService {
+  constructor(
+    @InjectModel('cats') private catModel: Model<CatDocument>,
+  ) {}
+
+  async list(
+    collectionOptions: ApiCollectionDto,
+  ): Promise<CollectionResponse<CatDto>> {
+    const catDocumentCollector = new DocumentCollector<CatDocument>(
+      this.catModel,
+    );
+    return await catDocumentCollector.find(collectionOptions);
+  }
+
 }
 ```
 
@@ -194,12 +232,13 @@ import {
 @Injectable()
 export class AppService {
   constructor(
-    @InjectDocumentCollector('MyModel') private readonly myDocumentCollector: DocumentCollector<MyDocument>,
+    @InjectModel('cats') private catModel: Model<CatDocument>,
   )
 
   async list(
       collectionDto: CollectionDto,
   ): Promise<CollectionResponse<MyDocument>> {
+    const myDocumentCollector = new MyCustomDocumentCollector<MyDocument>(this.myModel);
     return this.myDocumentCollector.find(collectionDto);
   }
 }
@@ -263,92 +302,6 @@ export class MyCustomDocumentCollector extends DocumentCollector<MyDocument> {
       .exec();
     return res?.countTotal ?? 0;
   }
-}
-```
-
-### Register custom document collector
-
-```typescript
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { PaginateModule } from '@minhlucvan/nestjs-paginate-mongoose';
-
-
-@Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: 'MyModel', schema: MySchema },
-    ]),
-    PaginateModule.forFeature({
-      documentCollectors: [MyCustomDocumentCollector],
-    }),
-  ],
-  exports: [MyCustomDocumentCollector],
-})
-export class MyModule {}
-```
-
-### Inject custom document collector
-
-```typescript
-import { Injectable } from '@nestjs/common';
-
-@Injectable()
-export class MyService {
-  constructor(
-    @InjectDocumentCollector('MyModel') private readonly myDocumentCollector: DocumentCollector<MyDocument>,
-  )
-
-  async list(
-      collectionDto: CollectionDto,
-  ): Promise<CollectionResponse<MyDocument>> {
-    return this.myDocumentCollector.find(collectionDto);
-  }
-}
-```
-
-## Filter operators
-
-Filter operators must be whitelisted per column in the `CollectionProperties` class.
-
-### Code
-
-```typescript
-import {
-  CollectionProperties,
-  ApiExpose
-} from '@minhlucvan/nestjs-paginate-mongoose';
-
-export class MyCollectionProperties extends CollectionProperties {
-  @ApiExpose({ 
-    sortable: true,
-    filterable: true,
-    filterOperators: ['$eq']
-  })
-  readonly id: string;
-
-  @ApiExpose({
-    sortable: true,
-    filterable: true,
-    filterOperators: ['$ilike', '$sw', '$contains']
-  })
-  readonly name: string;
-
-  @ApiExpose({
-    sortable: true,
-    filterable: true,
-    filterOperators: ['$eq']
-  })
-  readonly color: string;
-
-  @ApiExpose({
-    sortable: true,
-    filterable: true,
-    filterOperators: ['$eq', '$gt', '$gte', '$lt', '$lte', '$btw']
-  })
-  readonly age: number;
-
-  readonly unsortable: string;
 }
 ```
 

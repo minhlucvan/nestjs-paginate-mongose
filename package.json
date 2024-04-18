@@ -1,7 +1,7 @@
 {
-  "name": "@minhducmike/nestjs-paginate-mongoose",
-  "version": "1.2.9",
-  "description": "A pagination, filtering and sorting lib for nestjs using mongoose orm",
+  "name": "@minhlucvan/nestjs-paginate-mongoose",
+  "version": "1.0.0",
+  "description": "Pagination and filtering module for `mongoose` repositories or custom aggregators using Nest.js framework.  ",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -48,6 +48,7 @@
     "ajv": "^8.12.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "mongoose": "^8.3.2",
     "rxjs": "^7.8.1"
   },
   "jest": {

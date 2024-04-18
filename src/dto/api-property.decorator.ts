@@ -1,7 +1,19 @@
-import {
-  CollectionProperties,
-  CollectionPropertyOptions,
-} from '@forlagshuset/nestjs-mongoose-paginate';
+import { CollectionProperties, CollectionPropertyOptions } from '../property';
+
+export type ApiFilterOperator =
+  | '$eq'
+  | '$gt'
+  | '$gte'
+  | '$in'
+  | '$lt'
+  | '$lte'
+  | '$ne'
+  | '$nin'
+  | '$and'
+  | '$not'
+  | '$nor'
+  | '$or'
+  | '$regex';
 
 export enum EApiFilterOperator {
   EQ = '$eq',
@@ -22,7 +34,7 @@ export enum EApiFilterOperator {
 export const DEFAULT_FILTER_OPERATORS: EApiFilterOperator[] =
   Object.values(EApiFilterOperator);
 
-export type ApiFilterOperators = EApiFilterOperator[];
+export type ApiFilterOperators = EApiFilterOperator[] | ApiFilterOperator[];
 
 export type ApiCollectionPropertyOptions = CollectionPropertyOptions & {
   filterOperators?: ApiFilterOperators;
