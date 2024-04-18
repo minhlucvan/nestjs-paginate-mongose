@@ -1,5 +1,5 @@
 import { CollectionProperties } from './property';
-import { Expose } from './property.decorator';
+import { Expose } from './dto/api-property.decorator';
 
 class User extends CollectionProperties {
   @Expose({ sortable: true, filterable: true })

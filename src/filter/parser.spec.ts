@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { CollectionProperties } from '../property';
-import { Expose } from '../property.decorator';
+import { Expose } from '../dto/api-property.decorator';
 import { FilterParser } from './parser';
 import { FilterValidationError } from './validation.error';
 

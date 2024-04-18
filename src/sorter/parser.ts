@@ -1,7 +1,11 @@
+import {
+  CollectionProperties,
+  CollectionDto,
+  SortValidationError,
+} from '@forlagshuset/nestjs-mongoose-paginate';
 import { isNotEmpty } from 'class-validator';
-import { CollectionProperties } from '../property';
-import { SortableParameters } from '../input.dto';
-import { SortValidationError } from './validation.error';
+
+export type SortableParameters = Record<string, 'desc' | 'asc'>;
 
 export class SorterParser {
   constructor(private collectionPropsClass: typeof CollectionProperties) {}

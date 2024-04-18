@@ -15,18 +15,8 @@ export class CounterDto {
   readonly filter?: FilterableParameters;
 }
 
-export class CollectionDto {
+export class ApiCollectionDto {
   @ApiPropertyOptional({
-    type: String,
-    description: 'Filter query string, see documentation for its schema',
-  })
-  @Transform((v: TransformFnParams) => filterQueryToObject(v.value))
-  @IsOptional()
-  @IsObject()
-  readonly filter?: FilterableParameters;
-
-  @ApiPropertyOptional({
-    example: '-created_at;filename',
     description:
       'Use only allowed properties separated by semicolon; default is ascending created_at; prefix name with hyphen/minus sign to get descending order',
     type: String,
@@ -46,6 +36,14 @@ export class CollectionDto {
   @Min(0)
   @ApiPropertyOptional({ example: 10, description: '' })
   readonly limit?: number = 10;
+
+  @ApiPropertyOptional({
+    description: 'root',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  readonly root?: string;
 }
 
 function filterQueryToObject(v: string): Record<string, unknown> {

@@ -2,7 +2,7 @@ import { plainToClass } from 'class-transformer';
 import { FilterValidationError } from './filter/validation.error';
 import { CollectionDto } from './input.dto';
 import { CollectionProperties } from './property';
-import { Expose } from './property.decorator';
+import { Expose } from './dto/api-property.decorator';
 import { SortValidationError } from './sorter/validation.error';
 import { ValidationPipe } from './validation.pipe';
 

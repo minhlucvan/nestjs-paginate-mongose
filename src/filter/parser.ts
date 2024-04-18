@@ -1,7 +1,14 @@
-import { CollectionProperties } from '../property';
-import { CollectionDto, FilterableParameters } from '../input.dto';
-import { FilterValidationError } from './validation.error';
-import { FilterSchemaValidator } from './validator';
+import {
+  CollectionProperties,
+  CollectionDto,
+  SortValidationError,
+} from '@forlagshuset/nestjs-mongoose-paginate';
+import { FilterSchemaValidator } from './filter-schema.validator';
+import { BadRequestException } from '@nestjs/common';
+import { EApiFilterOperator } from './property.decorator';
+
+export type FilterableParameters = Record<string, unknown>;
+export class FilterValidationError extends BadRequestException {}
 
 const allowedKeys = [
   '$eq',
@@ -42,12 +49,14 @@ export class FilterParser {
       }
     } else if (v instanceof Object) {
       for (const key in v) {
+        const value = this.transformValue(key, v[key]);
         if (/^\$/.test(key)) {
-          this.validateAllowedKey(key, v[key]);
+          this.validateAllowedKey(key, value);
+          v[key] = value;
         } else {
-          const prop = this.validateProperty(key, v[key]);
+          const prop = this.validateProperty(key, value);
           if (prop !== key) {
-            v[prop] = v[key];
+            v[prop] = value;
             delete v[key];
           }
         }
@@ -76,5 +85,15 @@ export class FilterParser {
       );
 
     this.transform(value);
+  }
+
+  private transformValue(key: string, value: any) {
+    if (key === EApiFilterOperator.IN.toString()) {
+      if (typeof value !== 'string') {
+        return value;
+      }
+      return value.split(',').map((e) => e.trim());
+    }
+    return value;
   }
 }

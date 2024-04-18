@@ -2,7 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { CollectionResponse } from '../output.dto';
 import { CollectionDto } from '../input.dto';
 import { CollectionProperties } from '../property';
-import { Expose } from '../property.decorator';
+import { Expose } from '../dto/api-property.decorator';
 import { ValidationPipe } from '../validation.pipe';
 
 export class MyCollectionProperties extends CollectionProperties {

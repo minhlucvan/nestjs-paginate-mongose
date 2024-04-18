@@ -1,5 +1,5 @@
 {
-  "name": "@forlagshuset/nestjs-mongoose-paginate",
+  "name": "@minhducmike/nestjs-paginate-mongoose",
   "version": "1.2.9",
   "description": "A pagination, filtering and sorting lib for nestjs using mongoose orm",
   "main": "dist/index.js",
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fagbokforlaget/nestjs-mongoose-paginate.git"
+    "url": "git+https://github.com/minhlucvan/nestjs-paginate-mongose.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fagbokforlaget/nestjs-mongoose-paginate/issues"
+    "url": "https://github.com/minhlucvan/nestjs-paginate-mongose"
   },
-  "homepage": "https://github.com/fagbokforlaget/nestjs-mongoose-paginate#readme",
+  "homepage": "https://github.com/minhlucvan/nestjs-paginate-mongose",
   "devDependencies": {
     "@nestjs/testing": "^10.2.6",
     "@types/jest": "^29.5.5",
