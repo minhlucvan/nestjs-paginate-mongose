@@ -1,7 +1,5 @@
 # nestjs-paginate-mongoose
 
-> Warning: This project is under development and is NOT ready for any use.
-
 > Contribution: This project is open for contribution. Please submit a PR with the changes you would like to see.
 
 [![npm version](https://badge.fury.io/js/%40forlagshuset%2Fnestjs-mongoose-paginate.svg)](https://badge.fury.io/js/%40forlagshuset%2Fnestjs-mongoose-paginate)
