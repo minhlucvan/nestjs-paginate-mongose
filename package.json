@@ -1,6 +1,6 @@
 {
   "name": "@minhlucvan/nestjs-paginate-mongoose",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pagination and filtering module for `mongoose` repositories or custom aggregators using Nest.js framework.  ",
   "main": "dist/index.js",
   "scripts": {
